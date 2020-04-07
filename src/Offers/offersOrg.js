@@ -3,11 +3,13 @@ import EditOffer from './editOffer';
 import OfferTable from './offersTable';
 import OfferSorter from './offerSorter';
 import { db } from '../firebase';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, useLocation } from 'react-router-dom';
+import Home from '../Home/homeOrg';
+import OfferView from './offerView';
 
-function OffersOrg({ aptCxs, offers, setOffers }) {
+function OffersOrg({ aptCxs, offers, setOffers, getAptCxObj }) {
   const emptyOffer = {
-    aptCx: '',
+    aptCxId: '',
     numBeds: '',
     numBaths: '',
     isFrn: '',
@@ -30,18 +32,18 @@ function OffersOrg({ aptCxs, offers, setOffers }) {
   let [mode, setMode] = React.useState('empty');
   let [curOffer, setCurOffer] = React.useState(emptyOffer);
 
-  useEffect(() => {
-    const unsub = db.collection('offers').onSnapshot(snapshot => {
-      const allOffers = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setOffers(allOffers);
-    });
-    return () => {
-      unsub();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const unsub = db.collection('offers').onSnapshot(snapshot => {
+  //     const allOffers = snapshot.docs.map(doc => ({
+  //       id: doc.id,
+  //       ...doc.data()
+  //     }));
+  //     setOffers(allOffers);
+  //   });
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, []);
 
   const deleteOffer = offer => {
     db.collection('offers')
@@ -77,7 +79,11 @@ function OffersOrg({ aptCxs, offers, setOffers }) {
 
   let updateCurOffer = (key, value) => {
     let newOffer = { ...curOffer };
-    newOffer[key] = value;
+    if (key === 'aptCx') {
+      newOffer[key] = getAptCxObj(value).id;
+    } else {
+      newOffer[key] = value;
+    }
     setCurOffer(newOffer);
   };
 
@@ -87,9 +93,11 @@ function OffersOrg({ aptCxs, offers, setOffers }) {
     setCurOffFilt(newOfferFilt);
   };
 
+  const query = new URLSearchParams(useLocation().search);
+
   return (
     <Switch>
-      <Route path='/packages/create'>
+      <Route exact path='/packages/create'>
         <EditOffer
           aptCxs={aptCxs}
           mode={mode}
@@ -99,7 +107,7 @@ function OffersOrg({ aptCxs, offers, setOffers }) {
           cancelClick={cancelClick}
         />
       </Route>
-      <Route path='/packages/view'>
+      <Route exact path='/packages/view'>
         <OfferSorter curOffFilt={curOffFilt} updateCurOffFilt={updateCurOffFilt} />
         <OfferTable
           offers={offers}
@@ -107,7 +115,11 @@ function OffersOrg({ aptCxs, offers, setOffers }) {
           setCurOffer={setCurOffer}
           deleteOffer={deleteOffer}
           curOffFilt={curOffFilt}
+          getAptCxObj={getAptCxObj}
         />
+      </Route>
+      <Route path='/packages'>
+        <OfferView offers={offers} id={query.get('id')} getAptCxObj={getAptCxObj} />
       </Route>
     </Switch>
   );

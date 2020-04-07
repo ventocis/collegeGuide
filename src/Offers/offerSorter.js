@@ -6,7 +6,7 @@ function offerSorter({ curOffFilt, updateCurOffFilt }) {
       <div className='col'>
         <h5>Bathrooms</h5>
         <select
-          class='form-control'
+          className='form-control'
           id='minBathsFilt'
           onChange={event => updateCurOffFilt('numBaths', event.target.value)}
         >

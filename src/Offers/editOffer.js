@@ -50,12 +50,12 @@ function EditOffer({
             name='aptCxName'
             id='aptCxName'
             value={curOffer.aptCx}
-            onChange={event => updateCurOffer('aptCx', event.target.value)}
+            onChange={event => updateCurOffer('aptCxId', event.target.value)}
           >
             <option></option>
             {aptCxs.map((aptCx, key) => {
               return (
-                <option key={key} value={aptCx.name}>
+                <option key={key} value={aptCx.id}>
                   {aptCx.name}
                 </option>
               );

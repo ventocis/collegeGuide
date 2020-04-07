@@ -6,7 +6,14 @@ const rowStyle = {
   padding: '8px'
 };
 
-function OffersTable({ curOffFilt, setMode, offers, setCurOffer, deleteOffer }) {
+function OffersTable({
+  curOffFilt,
+  setMode,
+  offers,
+  setCurOffer,
+  deleteOffer,
+  getAptCxObj
+}) {
   const filteredOffers = offers.filter(curOffer => {
     if (
       (curOffer.numBaths >= curOffFilt.numBaths || curOffFilt.numBaths === '') &&
@@ -15,8 +22,6 @@ function OffersTable({ curOffFilt, setMode, offers, setCurOffer, deleteOffer }) 
       return true;
     return false;
   });
-
-  console.log(curOffFilt.sort);
 
   const sortedOffers = filteredOffers.sort(function(a, b) {
     if (curOffFilt.sort === '') {
@@ -29,8 +34,6 @@ function OffersTable({ curOffFilt, setMode, offers, setCurOffer, deleteOffer }) 
       }
     }
   });
-
-  console.log(sortedOffers);
 
   if (sortedOffers.length > 0) {
     return (
@@ -54,6 +57,7 @@ function OffersTable({ curOffFilt, setMode, offers, setCurOffer, deleteOffer }) 
                 key={index}
                 setCurOffer={setCurOffer}
                 deleteOffer={deleteOffer}
+                getAptCxObj={getAptCxObj}
               />
             ))}
           </tbody>

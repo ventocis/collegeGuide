@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import AptOrg from './AptCx/aptOrg';
+import AptCxOrg from './AptCx/aptCxOrg';
 import HomeOrg from './Home/homeOrg';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import OffersOrg from './Offers/offersOrg.js';
@@ -18,10 +18,44 @@ function MainOrg() {
       }));
       setAptCxs(allAptCxs);
     });
+
+    const unsub2 = db.collection('offers').onSnapshot(snapshot => {
+      const allOffers = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setOffers(allOffers);
+    });
+
     return () => {
       unsub();
+      unsub2();
     };
   }, []);
+
+  let getAptCxObj = curId => {
+    let curApt = aptCxs.filter(aptCx => aptCx.id === curId)[0];
+    if (curApt === undefined) {
+      curApt = {
+        name: '',
+        address: '',
+        city: '',
+        email: ''
+      };
+    }
+    return curApt;
+  };
+
+  const getOffersForCx = cxId => {
+    // while (offers.length == 0);
+    let relatedOffers = offers.filter(offer => offer.aptCxId === cxId);
+    console.log(relatedOffers);
+    if (relatedOffers) {
+      return relatedOffers;
+    } else {
+      return undefined;
+    }
+  };
 
   return (
     <div>
@@ -29,14 +63,23 @@ function MainOrg() {
         <NavBar />
         <div className='container'>
           <Switch>
-            <Route exact path='/'>
+            <Route exact path='/hello'>
               <HomeOrg />
             </Route>
             <Route path='/packages'>
-              <OffersOrg aptCxs={aptCxs} offers={offers} setOffers={setOffers} />
+              <OffersOrg
+                aptCxs={aptCxs}
+                offers={offers}
+                setOffers={setOffers}
+                getAptCxObj={getAptCxObj}
+              />
             </Route>
             <Route path='/aptComplexes'>
-              <AptOrg aptCxs={aptCxs} setAptCxs={setAptCxs} />
+              <AptCxOrg
+                aptCxs={aptCxs}
+                setAptCxs={setAptCxs}
+                getOffersForCx={getOffersForCx}
+              />
             </Route>
           </Switch>
         </div>

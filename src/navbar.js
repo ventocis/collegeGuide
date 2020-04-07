@@ -32,7 +32,7 @@ function NavBar() {
               </NavLink>
             </li>
             <li className='nav-item'>
-              <NavLink to='/aptcomplexes' className='nav-link'>
+              <NavLink to='/aptcomplexes/view' className='nav-link'>
                 Apartment Complexes
               </NavLink>
             </li>
