@@ -5,7 +5,14 @@ import AptCxView from './aptCxView';
 import { db } from '../firebase.js';
 import { Switch, Route, useLocation } from 'react-router-dom';
 
-function AptCxOrg({ aptCxs, setAptCxs, getOffersForCx, offers }) {
+function AptCxOrg({
+  aptCxs,
+  setAptCxs,
+  getOffersForCx,
+  offers,
+  getReviewsForCx,
+  getAptCxObj
+}) {
   ///Apt Cx Logic
   let emptyAptCx = {
     name: '',
@@ -29,7 +36,13 @@ function AptCxOrg({ aptCxs, setAptCxs, getOffersForCx, offers }) {
       return curAptCx.email === aptCx.email;
     });
 
-    if (aptCx.name !== '' && aptCx.streetAddr !== '' && aptCx.email !== '') {
+    let isFilledIn = true;
+    Object.keys(aptCx).forEach((key, index) => {
+      if (aptCx[key].length == 0) {
+        isFilledIn = false;
+      }
+    });
+    if (isFilledIn) {
       if (mode === 'empty') {
         if (matchingAptCxs.length === 0) {
           db.collection('aptCmplxs').add(aptCx);
@@ -45,7 +58,7 @@ function AptCxOrg({ aptCxs, setAptCxs, getOffersForCx, offers }) {
         setCurAptCx(emptyAptCx);
       }
     } else {
-      alert('AptCxs needs to be fully filled out & have a unique email');
+      alert('AptCxs needs to be fully filled out');
     }
   };
 
@@ -84,7 +97,13 @@ function AptCxOrg({ aptCxs, setAptCxs, getOffersForCx, offers }) {
         />
       </Route>
       <Route path='/aptcomplexes'>
-        <AptCxView aptCxs={aptCxs} id={query.get('id')} getOffersForCx={getOffersForCx} />
+        <AptCxView
+          aptCxs={aptCxs}
+          id={query.get('id')}
+          getOffersForCx={getOffersForCx}
+          getReviewsForCx={getReviewsForCx}
+          getAptCxObj={getAptCxObj}
+        />
       </Route>
     </Switch>
   );

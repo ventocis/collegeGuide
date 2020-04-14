@@ -14,7 +14,8 @@ function OffersOrg({ aptCxs, offers, setOffers, getAptCxObj }) {
     numBaths: '',
     isFrn: '',
     sqFt: '',
-    rate: ''
+    rate: '',
+    aptCxName: ''
   };
 
   const emptyOffFilt = {
@@ -52,7 +53,17 @@ function OffersOrg({ aptCxs, offers, setOffers, getAptCxObj }) {
   };
 
   let formSubmitted = offer => {
-    if (offer.name !== '' && offer.streetAddr !== '' && offer.email !== '') {
+    console.log(offer);
+    let isFilledIn = true;
+    Object.keys(offer).forEach((key, index) => {
+      if (offer[key].length == 0 && key !== 'aptCxName') {
+        isFilledIn = false;
+      }
+    });
+
+    if (isFilledIn) {
+      offer.aptCxName = getAptCxObj(offer.aptCxId).name;
+      console.log(offer);
       if (mode === 'empty') {
         db.collection('offers').add(offer);
         setCurOffer(emptyOffer);
@@ -64,7 +75,7 @@ function OffersOrg({ aptCxs, offers, setOffers, getAptCxObj }) {
         setCurOffer(emptyOffer);
       }
     } else {
-      alert('Offers needs to be fully filled out & have a unique email');
+      alert('Package needs to be fully filled out');
     }
   };
 

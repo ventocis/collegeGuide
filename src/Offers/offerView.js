@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { db } from '../firebase';
 
 function OfferView({ offers, id, getAptCxObj }) {
   let curOffer = offers.filter(offer => offer.id === id);
