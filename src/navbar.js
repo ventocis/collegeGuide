@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 function NavBar({ curUser }) {
   return (
-    <nav className='navbar navbar-expand-lg navbar-light container-fluid'>
+    <nav className='navbar navbar-expand-lg navbar-dark bg-dark text-white container-fluid mb-4'>
       <button
         className='navbar-toggler'
         type='button'
@@ -15,10 +15,10 @@ function NavBar({ curUser }) {
       >
         <span className='navbar-toggler-icon'></span>
       </button>
+      <a className='navbar-brand' href='/'>
+        College Guide
+      </a>
       <div className='collapse navbar-collapse' id='navbarTogglerDemo01'>
-        <a className='navbar-brand' href='/'>
-          College Guide
-        </a>
         <div>
           <ul className='navbar-nav mr-auto mt-2 mt-lg-0'>
             <li className='nav-item'>
@@ -40,11 +40,6 @@ function NavBar({ curUser }) {
               <NavLink to='/reviews/create' className='nav-link'>
                 Review Your Place
               </NavLink>
-            </li>
-            <li className='nav-item'>
-              <a href='/' className='nav-link'>
-                Welcome {curUser.fName}
-              </a>
             </li>
           </ul>
         </div>

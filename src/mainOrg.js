@@ -5,9 +5,15 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import OffersOrg from './Offers/offersOrg.js';
 import { db } from './firebase';
 import NavBar from './navbar';
-import GSignIn from './gSignIn';
-import StudentOrg from './User/studentOrg';
+
+import StudentOrg from './Student/studentOrg';
 import ReviewsOrg from './Reviews/reviewsOrg';
+import Footer from './footer';
+import Home from './home';
+
+const overflowStyle = {
+  overflowX: 'hidden'
+};
 
 function MainOrg({ curUser, setCurUser }) {
   let [aptCxs, setAptCxs] = React.useState([]);
@@ -25,7 +31,8 @@ function MainOrg({ curUser, setCurUser }) {
     const unsub = db.collection('aptCmplxs').onSnapshot(snapshot => {
       const allAptCxs = snapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
+        picUrl: '/Imgs/AptCxs/' + doc.data().name + '/' + doc.data().pics[0]
       }));
       setAptCxs(allAptCxs);
     });
@@ -69,7 +76,8 @@ function MainOrg({ curUser, setCurUser }) {
         name: '',
         address: '',
         city: '',
-        email: ''
+        email: '',
+        pic: ''
       };
     }
     return curApt;
@@ -88,7 +96,6 @@ function MainOrg({ curUser, setCurUser }) {
   const getReviewsForCx = cxId => {
     // while (offers.length == 0);
     let relatedReviews = reviews.filter(review => review.aptCxId === cxId);
-    console.log(relatedReviews);
     if (relatedReviews) {
       return relatedReviews;
     } else {
@@ -96,47 +103,46 @@ function MainOrg({ curUser, setCurUser }) {
     }
   };
   return (
-    <div>
-      <BrowserRouter>
-        <NavBar curUser={curUser} />
-        <div className='container'>
-          <Switch>
-            <Route exact path='/'>
-              <HomeOrg />
-              <GSignIn updateCurUser={updateCurUser} />
-            </Route>
-            <Route path='/packages'>
-              <OffersOrg
-                aptCxs={aptCxs}
-                offers={offers}
-                setOffers={setOffers}
-                getAptCxObj={getAptCxObj}
-              />
-            </Route>
-            <Route path='/aptComplexes'>
-              <AptCxOrg
-                aptCxs={aptCxs}
-                setAptCxs={setAptCxs}
-                getOffersForCx={getOffersForCx}
-                getReviewsForCx={getReviewsForCx}
-                getAptCxObj={getAptCxObj}
-              />
-            </Route>
-            <Route path='/students'>
-              <StudentOrg students={students} setStudents={setStudents} offers={offers} />
-            </Route>
-            <Route path='/reviews'>
-              <ReviewsOrg
-                aptCxs={aptCxs}
-                reviews={reviews}
-                setReviews={setReviews}
-                getAptCxObj={getAptCxObj}
-              />
-            </Route>
-          </Switch>
-        </div>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <NavBar curUser={curUser} />
+      <div className='container'>
+        <Switch>
+          <Route exact path='/'>
+            <Home />
+          </Route>
+          <Route path='/packages'>
+            <OffersOrg
+              aptCxs={aptCxs}
+              offers={offers}
+              setOffers={setOffers}
+              getAptCxObj={getAptCxObj}
+              getReviewsForCx={getReviewsForCx}
+            />
+          </Route>
+          <Route path='/aptComplexes'>
+            <AptCxOrg
+              aptCxs={aptCxs}
+              setAptCxs={setAptCxs}
+              getOffersForCx={getOffersForCx}
+              getReviewsForCx={getReviewsForCx}
+              getAptCxObj={getAptCxObj}
+            />
+          </Route>
+          <Route path='/students'>
+            <StudentOrg students={students} setStudents={setStudents} offers={offers} />
+          </Route>
+          <Route path='/reviews'>
+            <ReviewsOrg
+              aptCxs={aptCxs}
+              reviews={reviews}
+              setReviews={setReviews}
+              getAptCxObj={getAptCxObj}
+            />
+          </Route>
+        </Switch>
+      </div>
+      <Footer />
+    </BrowserRouter>
   );
 }
 

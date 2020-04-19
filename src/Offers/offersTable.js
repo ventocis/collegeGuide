@@ -1,11 +1,6 @@
 import React from 'react';
 import Offer from './offer.js';
 
-const rowStyle = {
-  textAlign: 'left',
-  padding: '8px'
-};
-
 function OffersTable({
   curOffFilt,
   setMode,
@@ -37,48 +32,23 @@ function OffersTable({
 
   if (sortedOffers.length > 0) {
     return (
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th style={rowStyle}>Apt Complex Name</th>
-              <th style={rowStyle}>Bedrooms</th>
-              <th style={rowStyle}>Bathrooms</th>
-              <th style={rowStyle}>Sq Ft</th>
-              <th style={rowStyle}>Monthly Rate</th>
-              <th style={rowStyle}>Furnished</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedOffers.map((offer, index) => (
-              <Offer
-                setMode={setMode}
-                offer={offer}
-                key={index}
-                setCurOffer={setCurOffer}
-                deleteOffer={deleteOffer}
-                getAptCxObj={getAptCxObj}
-              />
-            ))}
-          </tbody>
-        </table>
+      <div className='container-fluid'>
+        <div className='row justify-content-between'>
+          {sortedOffers.map((offer, index) => (
+            <Offer
+              setMode={setMode}
+              offer={offer}
+              key={index}
+              setCurOffer={setCurOffer}
+              deleteOffer={deleteOffer}
+              getAptCxObj={getAptCxObj}
+            />
+          ))}
+        </div>
       </div>
     );
   } else {
-    return (
-      <table>
-        <thead>
-          <tr>
-            <th style={rowStyle}>Apt Complex Name</th>
-            <th style={rowStyle}>Bedrooms</th>
-            <th style={rowStyle}>Bathrooms</th>
-            <th style={rowStyle}>Sq Ft</th>
-            <th style={rowStyle}>Monthly Rate</th>
-            <th style={rowStyle}>Furnished</th>
-          </tr>
-        </thead>
-      </table>
-    );
+    return <h4>No offers match the current filters</h4>;
   }
 }
 

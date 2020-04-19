@@ -1,55 +1,37 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-const rowStyle = {
-  textAlign: 'left',
-  padding: '8px'
-};
+function Review({ reviews, id, getAptCxObj }) {
+  let curReview = reviews.filter(review => review.id === id);
+  let myReview = curReview[0];
+  let aptCxName = '';
+  let queryStr = '';
 
-function Review({ review, setMode, setCurReview, deleteReview, getAptCxObj }) {
-  let editReview = event => {
-    setMode('edit');
-    setCurReview(review);
-  };
+  if (myReview) {
+    aptCxName = getAptCxObj(myReview.aptCxId).name;
+    queryStr = '?id=' + myReview.aptCxId;
+  }
 
-  let deleteClick = () => {
-    deleteReview(review);
-  };
-
-  let curReviewId = 'id=' + review.id;
-  const curAptCxId = 'id=' + review.aptCxId;
-  const aptCxName = getAptCxObj(review.aptCxId).name;
-
-  if (aptCxName) {
+  if (myReview) {
     return (
-      <tr>
-        <td style={rowStyle}>
-          <Link to={{ pathname: '/aptcomplexes', search: curAptCxId }}>{aptCxName} </Link>
-        </td>
-        <td style={rowStyle}> {review.numBeds} </td>
-        <td style={rowStyle}> {review.numBaths}</td>
-        <td style={rowStyle}>{review.sqFt}</td>
-        <td style={rowStyle}> {review.rate} </td>
-        <td style={rowStyle}> {review.isFrn} </td>
-        <td style={rowStyle}>
-          <Link to={{ pathname: '/packages', search: curReviewId }}>
-            View This Package{' '}
-          </Link>
-        </td>
-        <td>
-          <button onClick={event => editReview(event)}>Edit AptCx</button>
-          <button onClick={event => deleteClick(event)}>Delete</button>
-        </td>
-      </tr>
+      <div className='card p-3 mt-3'>
+        <div clasname='card-body'>
+          <h5 className='card-title'>{myReview.stars}/5 stars</h5>
+          <h6 className='card-subtitle pb-1 text-muted'>
+            Rent: ${myReview.rent}/month&emsp;Avg Utilities: ${myReview.utils}/month
+            <br></br>
+          </h6>
+          <p className='card-text'>
+            {myReview.numBeds} bed {myReview.numBaths} bath Furnished: {myReview.isFrn}
+            <br></br>
+            What they had to say:<br></br>
+            {myReview.reviewTxt}
+          </p>
+        </div>
+      </div>
     );
   } else {
-    return <tr></tr>;
+    return <h1></h1>;
   }
 }
 
 export default Review;
-
-//client id & then client secret
-//966300622797-n018hjge6e4ltjjs049lopah1k1mov3o.apps.googleusercontent.com
-
-//7rpIh9oA9ks5JDdQWsv-sd93

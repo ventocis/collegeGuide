@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import ShowStudent from './editStudent.js';
-import StudentTable from './studentTable.js';
+import React from 'react';
+import ShowStudent from './editStudent';
+import StudentTable from './studentTable';
 import StudentView from './studentView';
 import { db } from '../firebase.js';
 import { Switch, Route, useLocation } from 'react-router-dom';
@@ -38,7 +38,6 @@ function StudentOrg({ students, setStudents, getOffersForCx, offers }) {
       student.majors !== ''
     ) {
       if (mode === 'empty') {
-        console.log(student);
         if (matchingStudents.length === 0) {
           db.collection('students').add(student);
           setCurStudent(emptyStudent);
@@ -75,14 +74,11 @@ function StudentOrg({ students, setStudents, getOffersForCx, offers }) {
         curStudent.offerIds[value] = true;
       }
     } else {
-      console.log(curStudent);
       let newStudent = { ...curStudent };
       newStudent[key] = value;
 
       setCurStudent(newStudent);
     }
-
-    console.log(curStudent);
   };
 
   const query = new URLSearchParams(useLocation().search);

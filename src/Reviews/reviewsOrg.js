@@ -1,11 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import EditReview from './editReview';
-import ReviewTable from './reviewsTable';
-import ReviewSorter from './reviewSorter';
 import { db } from '../firebase';
 import { Switch, Route, useLocation } from 'react-router-dom';
-import Home from '../Home/homeOrg';
-import ReviewView from './reviewView';
+import ReviewView from './review';
 
 function ReviewsOrg({ aptCxs, reviews, setReviews, getAptCxObj }) {
   const emptyReview = {
@@ -34,29 +31,10 @@ function ReviewsOrg({ aptCxs, reviews, setReviews, getAptCxObj }) {
   let [mode, setMode] = React.useState('empty');
   let [curReview, setCurReview] = React.useState(emptyReview);
 
-  // useEffect(() => {
-  //   const unsub = db.collection('reviews').onSnapshot(snapshot => {
-  //     const allReviews = snapshot.docs.map(doc => ({
-  //       id: doc.id,
-  //       ...doc.data()
-  //     }));
-  //     setReviews(allReviews);
-  //   });
-  //   return () => {
-  //     unsub();
-  //   };
-  // }, []);
-
-  const deleteReview = review => {
-    db.collection('reviews')
-      .doc(review.id)
-      .delete();
-  };
-
   let formSubmitted = review => {
     let isFilledIn = true;
     Object.keys(review).forEach((key, index) => {
-      if (review[key].length == 0 && key !== 'aptCxName') {
+      if (review[key].length === 0 && key !== 'aptCxName') {
         isFilledIn = false;
       }
     });
@@ -83,10 +61,6 @@ function ReviewsOrg({ aptCxs, reviews, setReviews, getAptCxObj }) {
     setCurReview(emptyReview);
   };
 
-  let changeMode = mode => {
-    setMode(mode);
-  };
-
   let updateCurReview = (key, value) => {
     let newReview = { ...curReview };
     if (key === 'aptCx') {
@@ -96,12 +70,6 @@ function ReviewsOrg({ aptCxs, reviews, setReviews, getAptCxObj }) {
     }
     console.log(newReview);
     setCurReview(newReview);
-  };
-
-  let updateCurOffFilt = (key, value) => {
-    let newReviewFilt = { ...curOffFilt };
-    newReviewFilt[key] = value;
-    setCurOffFilt(newReviewFilt);
   };
 
   const query = new URLSearchParams(useLocation().search);
@@ -116,17 +84,6 @@ function ReviewsOrg({ aptCxs, reviews, setReviews, getAptCxObj }) {
           updateCurReview={updateCurReview}
           submitCallback={formSubmitted}
           cancelClick={cancelClick}
-        />
-      </Route>
-      <Route exact path='/reviews/view'>
-        <ReviewSorter curOffFilt={curOffFilt} updateCurOffFilt={updateCurOffFilt} />
-        <ReviewTable
-          reviews={reviews}
-          setMode={changeMode}
-          setCurReview={setCurReview}
-          deleteReview={deleteReview}
-          curOffFilt={curOffFilt}
-          getAptCxObj={getAptCxObj}
         />
       </Route>
       <Route path='/reviews'>

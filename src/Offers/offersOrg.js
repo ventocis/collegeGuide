@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import EditOffer from './editOffer';
 import OfferTable from './offersTable';
 import OfferSorter from './offerSorter';
 import { db } from '../firebase';
 import { Switch, Route, useLocation } from 'react-router-dom';
-import Home from '../Home/homeOrg';
 import OfferView from './offerView';
 
-function OffersOrg({ aptCxs, offers, setOffers, getAptCxObj }) {
+function OffersOrg({ aptCxs, offers, getAptCxObj, getReviewsForCx }) {
   const emptyOffer = {
     aptCxId: '',
     numBeds: '',
@@ -53,17 +52,15 @@ function OffersOrg({ aptCxs, offers, setOffers, getAptCxObj }) {
   };
 
   let formSubmitted = offer => {
-    console.log(offer);
     let isFilledIn = true;
     Object.keys(offer).forEach((key, index) => {
-      if (offer[key].length == 0 && key !== 'aptCxName') {
+      if (offer[key].length === 0 && key !== 'aptCxName') {
         isFilledIn = false;
       }
     });
 
     if (isFilledIn) {
       offer.aptCxName = getAptCxObj(offer.aptCxId).name;
-      console.log(offer);
       if (mode === 'empty') {
         db.collection('offers').add(offer);
         setCurOffer(emptyOffer);
@@ -130,7 +127,12 @@ function OffersOrg({ aptCxs, offers, setOffers, getAptCxObj }) {
         />
       </Route>
       <Route path='/packages'>
-        <OfferView offers={offers} id={query.get('id')} getAptCxObj={getAptCxObj} />
+        <OfferView
+          offers={offers}
+          id={query.get('id')}
+          getAptCxObj={getAptCxObj}
+          getReviewsForCx={getReviewsForCx}
+        />
       </Route>
     </Switch>
   );

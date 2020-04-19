@@ -1,5 +1,4 @@
 import React from 'react';
-import Offer from 'src/Offers/offer';
 import { db } from '../firebase';
 
 function ShowStudent({
@@ -52,10 +51,8 @@ function ShowStudent({
 
   async function getStudentOffers(off) {
     let aptCxName = '';
-    console.log(off.aptCxId);
     let aptCx = db.collection('aptCmplxs').doc(off.aptCxId);
     aptCxName = await aptCx.get().then(doc => {
-      console.log(doc.data().name);
       return doc.data().name;
     });
     return aptCxName;
@@ -137,6 +134,7 @@ function ShowStudent({
             onChange={event => updateCurStudent('email', event.target.value)}
           />
         </div>
+
         <h5> Where have you lived previously?</h5>
         {offers.map(off => {
           if ('hi' !== '') {

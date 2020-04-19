@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ReviewView from '../Reviews/reviewView';
+import ReviewsView from 'src/Reviews/reviewsView';
 
 function AptCxView({ aptCxs, id, getOffersForCx, getReviewsForCx, getAptCxObj }) {
   let curAptCx = aptCxs.filter(aptCx => aptCx.id === id);
   let myAptCx = curAptCx[0];
-  let aptCxName = '';
-  let queryStr = '';
 
   let myOffers = [];
   let myReviews = [];
@@ -18,15 +16,28 @@ function AptCxView({ aptCxs, id, getOffersForCx, getReviewsForCx, getAptCxObj })
     return <h1></h1>;
   }
 
-  console.log(myOffers);
+  let sum = 0;
+  myReviews.map(review => {
+    sum += parseInt(review.stars);
+  });
+
+  let avgReview = sum / myReviews.length;
+
+  if (!avgReview) {
+    avgReview = 'No reviews currently';
+  } else {
+    avgReview = avgReview + '/5 stars from ' + myReviews.length + ' reviews';
+  }
 
   if (myAptCx && myOffers) {
     return (
       <div>
         <h1>{myAptCx.name}</h1>
-        <p>Email: {myAptCx.name}</p>
-        <p>Address: {myAptCx.streetAddr}</p>
-        <p>etc.</p>
+        <img src={myAptCx.picUrl} alt='apartment' className='img-fluid'></img>
+        <p className='pt-3'>Email: {myAptCx.email}</p>
+        <p>
+          Address: {myAptCx.streetAddr} {myAptCx.city}
+        </p>
         <h4>Packages</h4>
         {myOffers.map(offer => {
           const curOfferId = '?id=' + offer.id;
@@ -40,20 +51,11 @@ function AptCxView({ aptCxs, id, getOffersForCx, getReviewsForCx, getAptCxObj })
           );
         })}
         <br></br>
-        <h4>Reviews</h4>
-        <Link to={{ pathname: '/reviews/create' }}>Write a Review</Link>
-        {myReviews.map((review, index) => {
-          return (
-            <div>
-              <ReviewView
-                reviews={myReviews}
-                id={review.id}
-                getAptCxObj={getAptCxObj}
-                key={index}
-              />
-            </div>
-          );
-        })}
+        <ReviewsView
+          getReviewsForCx={getReviewsForCx}
+          getAptCxObj={getAptCxObj}
+          aptCxId={myAptCx.id}
+        />
       </div>
     );
   }

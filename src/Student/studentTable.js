@@ -1,5 +1,5 @@
 import React from 'react';
-import Student from './student.js';
+import Student from './student';
 
 const rowStyle = {
   textAlign: 'left',

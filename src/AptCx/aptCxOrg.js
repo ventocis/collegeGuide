@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ShowAptCx from './editAptCx.js';
 import AptCxTable from './aptCxTable.js';
 import AptCxView from './aptCxView';
@@ -18,7 +18,8 @@ function AptCxOrg({
     name: '',
     streetAddr: '',
     city: '',
-    email: ''
+    email: '',
+    pic: ''
   };
 
   const deleteAptCx = aptCx => {
@@ -38,7 +39,7 @@ function AptCxOrg({
 
     let isFilledIn = true;
     Object.keys(aptCx).forEach((key, index) => {
-      if (aptCx[key].length == 0) {
+      if (aptCx[key].length === 0) {
         isFilledIn = false;
       }
     });
@@ -81,7 +82,7 @@ function AptCxOrg({
 
   return (
     <Switch>
-      <Route exact path='/aptcomplexes/view'>
+      <Route exact path='/aptcomplexes/table'>
         <ShowAptCx
           mode={mode}
           curAptCx={curAptCx}
@@ -89,6 +90,14 @@ function AptCxOrg({
           submitCallback={formSubmitted}
           cancelClick={cancelClick}
         />
+        <AptCxTable
+          aptCxs={aptCxs}
+          setMode={changeMode}
+          setCurAptCx={setCurAptCx}
+          deleteAptCx={deleteAptCx}
+        />
+      </Route>
+      <Route exact path='/aptcomplexes/view'>
         <AptCxTable
           aptCxs={aptCxs}
           setMode={changeMode}

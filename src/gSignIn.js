@@ -7,8 +7,6 @@ class GSignIn extends Component {
   }
 
   prepareLoginButton = () => {
-    console.log(this.refs.googleLoginBtn);
-
     this.auth2.attachClickHandler(
       this.refs.googleLoginBtn,
       {},
